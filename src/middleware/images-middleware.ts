@@ -4,19 +4,25 @@ import path from 'path';
 import sharp from 'sharp';
 const imagePath = path.resolve('./src/assets');
 
+const checkFileExist = (fileName: string) => {
+  return fs.existsSync(fileName);
+};
+
 const resizeFile = async (fileName: string, width: number, height: number) => {
   const widthAsNumber: number = +width;
   const heightAsNumber: number = +height;
   const filePath_Full = path.resolve(`${imagePath}/full/${fileName}.png`);
   const filePath_Thumb = path.resolve(`${imagePath}/thumb/${fileName}.png`);
+  if (checkFileExist(filePath_Thumb)) {
+    fs.unlinkSync(filePath_Thumb);
+  }
   await sharp(filePath_Full)
     .resize(widthAsNumber, heightAsNumber)
     .toFile(filePath_Thumb);
 
   const fileStream = fs.createReadStream(filePath_Thumb);
-  return fileStream;
+  return fileStream.path as string;
 };
-
 // Function to get the size of an image file
 async function getImageSize(
   filePath: string
@@ -43,4 +49,4 @@ async function compareImageSizes(
   }
 }
 
-export default { resizeFile, compareImageSizes };
+export default { resizeFile, compareImageSizes, checkFileExist };

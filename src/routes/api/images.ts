@@ -1,9 +1,9 @@
-import express, { NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
 const images = express.Router();
 import resizeImage from '../../middleware/images-middleware';
 const imagePath = path.resolve('./src/assets');
-images.get('/', async (req, res, next: NextFunction) => {
+images.get('/', async (req: Request, res: Response, next: NextFunction) => {
   const fileName = req.query.fileName;
   //check if user dont put the width or height we will get default value
   const width = req.query.width ? req.query.width : 300;
